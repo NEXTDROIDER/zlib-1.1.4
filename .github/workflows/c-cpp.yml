@@ -27,10 +27,9 @@ jobs:
       run: make distcheck
 
     - name: Upload a Build Artifact
-      uses: actions/actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4
       with:
         name: cpp-build-artifact
-        # Вкажіть тут шлях до файлу або папки, яку створив `make`, наприклад: bin/
         path: |
           *.tar.gz
           dist/
