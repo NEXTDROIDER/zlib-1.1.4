@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Arch Linux Package Builder
 
 on:
   push:
@@ -13,27 +13,31 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      
+
     - name: configure
       run: |
         chmod +x ./configure
-        # Додаємо прапор --shared для збірки динамічної бібліотеки .so
         ./configure --shared
-
 
     - name: make
       run: make
 
-    - name: Upload a Build Artifact
+    # Этот шаг превращает скомпилированные файлы в родной установщик .pkg.tar.zst
+    # Используем утилиту makepkg внутри легковесного docker-контейнера Arch Linux
+    - name: Build Arch Package (.pkg.tar.zst)
+      run: |
+        docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace archlinux:latest bash -c "
+          pacman -Syu --noconfirm base-devel binutils &&
+          useradd -m builder &&
+          chown -R builder:builder /workspace &&
+          sudo -u builder makepkg --nodeps --noprepare
+        "
+
+    - name: Upload Arch Installer Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: zlib-1.1.4-build
-        # Маска для поиска всех скомпилированных библиотек zlib
-        path: |
-          *.so*
-          *.a
-          libz.*
-        if-no-files-found: warn
-        retention-days: 14
-        compression-level: 6
-        overwrite: true
+        name: arch-zlib-installer
+        # Робот загрузит именно готовый скомпилированный установщик Arch
+        path: "*.pkg.tar.zst"
+        if-no-files-found: error
+        retention-days: 7
