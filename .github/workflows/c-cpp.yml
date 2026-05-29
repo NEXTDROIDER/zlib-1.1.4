@@ -13,11 +13,13 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
+      
     - name: configure
       run: |
         chmod +x ./configure
-        ./configure
+        # Додаємо прапор --shared для збірки динамічної бібліотеки .so
+        ./configure --shared
+
 
     - name: make
       run: make
