@@ -1,0 +1,40 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: configure
+      run: ./configure
+
+    - name: make
+      run: make
+
+    - name: make check
+      run: make check
+
+    - name: make distcheck
+      run: make distcheck
+
+    - name: Upload a Build Artifact
+      uses: actions/actions/upload-artifact@v4
+      with:
+        name: cpp-build-artifact
+        # Вкажіть тут шлях до файлу або папки, яку створив `make`, наприклад: bin/
+        path: |
+          *.tar.gz
+          dist/
+        if-no-files-found: warn
+        retention-days: 14
+        compression-level: 6
+        overwrite: true
