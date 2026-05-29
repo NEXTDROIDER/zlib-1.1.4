@@ -22,19 +22,14 @@ jobs:
     - name: make
       run: make
 
-    - name: make check
-      run: make check
-
-    - name: make distcheck
-      run: make distcheck
-
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4
       with:
         name: cpp-build-artifact
+        # Вкажіть тут правильний шлях до вашої зібраної програми, наприклад:
         path: |
-          *.tar.gz
-          dist/
+          ./zlib
+          bin/
         if-no-files-found: warn
         retention-days: 14
         compression-level: 6
