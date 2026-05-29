@@ -25,11 +25,12 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: cpp-build-artifact
-        # Вкажіть тут правильний шлях до вашої зібраної програми, наприклад:
+        name: zlib-1.1.4-build
+        # Маска для поиска всех скомпилированных библиотек zlib
         path: |
-          ./zlib
-          bin/
+          *.so*
+          *.a
+          libz.*
         if-no-files-found: warn
         retention-days: 14
         compression-level: 6
