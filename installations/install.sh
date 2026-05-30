@@ -11,6 +11,7 @@ echo "Downloading package..."
 curl -sSL "$URL" -o "$PKG_DIR/zlib.pkg.tar.zst"
 
 echo "Installing package..."
+sudo pacman -Rns zlib-ng-compat --noconfirm
 sudo pacman -U --noconfirm "$PKG_DIR/zlib.pkg.tar.zst"
 
 echo "Installed successfully!"
